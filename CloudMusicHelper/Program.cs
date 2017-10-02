@@ -414,6 +414,7 @@ namespace CloudMusicHelper
                 catch (Exception ex)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    Debug.Logger(ex.Message);
                 }
 
             }
@@ -498,8 +499,7 @@ namespace CloudMusicHelper
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
             /* Watch for changes in LastAccess and LastWrite times, and the renaming of files or directories. */
-
-            string filename = "history";
+            
             path = System.Text.RegularExpressions.Regex.Replace(path, "history", "");
 
             watcher.Path = path;

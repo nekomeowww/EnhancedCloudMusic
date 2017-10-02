@@ -3,10 +3,14 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Globalization;
 using System.Threading.Tasks;
+using System.Security.Permissions;
 
 /**************************************************************
  *                                                            *
@@ -25,19 +29,10 @@ namespace CloudMusicHelper
     {
         static void Main(string[] args)
         {
-            string result = FileControl.GetHistory();
-            if(result == null)
-            {
-                Console.WriteLine("File cant be found, check your directory.");
-                Console.ReadLine();
-                return;
-            }
-            else
-            {
-                Console.WriteLine("文件的绝对路径是在：" + result);
-                Console.ReadLine();
-                return;
-            }
+            Debug.Logger("初始化中，Web服务初始化中...");
+
+            DynamicControl.HistoryFileTracker(FileControl.GetHistory());
+            Console.ReadLine();
         }
     }
 
@@ -78,13 +73,17 @@ namespace CloudMusicHelper
                 Console.WriteLine(ex.Message);
             }
 
+            //debug
+            //Console.WriteLine(historytext);
+
             //Read and send data to processor
-            JsonControl.Parser(historytext);
+            JsonControl.HistoryParser(historytext);
 
             return historytext;
         }
     }
 
+    //[PermissionSet(SecurityAction.Demand, Name = "FullTrust")] //管理员权限，webapp需求
     class FileControl
     {
         public static string GetHistory() //GetHistory方法，获得history文件
@@ -98,7 +97,6 @@ namespace CloudMusicHelper
             }
             else
             {
-                Console.WriteLine("历史记录文件已找到，正在传回数据...");
                 return history;
             }
         }
@@ -135,7 +133,6 @@ namespace CloudMusicHelper
                     {
                         if (filename == filepath)
                         {
-                            Console.WriteLine("已经找到了文件！");
                             return filepath;
                         }
                     }
@@ -151,21 +148,109 @@ namespace CloudMusicHelper
 
     class JsonControl
     {
-        public static void Parser(string jsonfile)
+        public static Hierarchy HistoryParser(string jsonfile)
         {
             //file in
             string lines = jsonfile;
+            //json into hierarchy
+            //Hierarchy hierarchy = JsonConvert.DeserializeObject<Hierarchy>(lines);
+            JArray jarray = (JArray)JsonConvert.DeserializeObject(lines);
 
+            Hierarchy hirerachy = new Hierarchy();
 
-            //setup the interface for the data that has been pulled out
+            //list
+            string hierarchy = jarray[0].ToString();
+            string id = jarray[0]["id"].ToString();
+            string track = jarray[0]["track"].ToString();
+            string track_name = jarray[0]["track"]["name"].ToString();
+            string artist_name = jarray[0]["track"]["artists"][0]["name"].ToString();
+            string album_name = jarray[0]["track"]["album"]["name"].ToString();
 
+            Debug.Logger("正在播放：" + track_name + " by " + artist_name);
+            Debug.Logger("来自专辑：" + album_name);
+            //hirerachy.track.name = jobj["track"];
+            //hirerachy.track.id = ;
 
+            return hirerachy;
         }
+    }
+
+    class WebApp
+    {
+
     }
 
     class Modules
     {
 
+    }
+
+    class DynamicControl
+    {
+        public static void HistoryFileTracker(string path)
+        {
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            /* Watch for changes in LastAccess and LastWrite times, and the renaming of files or directories. */
+
+            string filename = "history";
+            path = System.Text.RegularExpressions.Regex.Replace(path, "history", "");
+
+            watcher.Path = path;
+            watcher.NotifyFilter = NotifyFilters.LastAccess | 
+                                   NotifyFilters.LastWrite | 
+                                   NotifyFilters.FileName | 
+                                   NotifyFilters.DirectoryName;
+
+            watcher.Filter = "history";
+
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            //watcher.Created += new FileSystemEventHandler(OnChanged);
+            //watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            //watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            watcher.Error += new ErrorEventHandler(OnError);
+
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private static void OnChanged(object source, FileSystemEventArgs e)
+        {
+            Debug.Logger("数据更新中...");
+            Thread.Sleep(2000);
+            HistoryControl.History();
+
+            /*
+             * 这里有个小bug，因为读取之后似乎文件被改变了，导致这个event被触发了一次
+             * 正在思考如何解决这个问题w
+             */
+
+            /*
+            if (e.ChangeType.ToString() == "Changed")
+            {
+                Debug.Logger("数据更新中...");
+            }
+            */
+        }
+        private static void OnRenamed(object source, RenamedEventArgs e)
+        {
+            // Specify what is done when a file is renamed.
+            Console.WriteLine("File: {0} renamed to {1}", e.OldFullPath, e.FullPath);
+        }
+
+        private static void OnError(object source, ErrorEventArgs e)
+        {
+            //  Show that an error has been detected.
+            Console.WriteLine("The FileSystemWatcher has detected an error");
+            //  Give more information if the error is due to an internal buffer overflow.
+            if (e.GetException().GetType() == typeof(InternalBufferOverflowException))
+            {
+                //  This can happen if Windows is reporting many file system events quickly 
+                //  and internal buffer of the  FileSystemWatcher is not large enough to handle this
+                //  rate of events. The InternalBufferOverflowException error informs the application
+                //  that some of the file system events are being lost.
+                Console.WriteLine(("The file system watcher experienced an internal buffer overflow: " + e.GetException().Message));
+            }
+        }
     }
 
     class Data
@@ -175,6 +260,16 @@ namespace CloudMusicHelper
 
     class Debug
     {
+        public static void NullTracker()
+        {
 
+        }
+
+        public static void Logger(string text)
+        {
+            DateTime localDate = DateTime.Now;
+            var format = new CultureInfo("zh-CN");
+            Console.WriteLine("[Debug Log] " + localDate.ToString(format) + " : " + text);
+        }
     }
 }

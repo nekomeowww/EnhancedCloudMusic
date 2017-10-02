@@ -31,11 +31,18 @@ namespace CloudMusicHelper
     {
         static void Main(string[] args)
         {
+            string appPath = AppDomain.CurrentDomain.BaseDirectory;
+
             DateTime localDate = DateTime.Now;
             var format = new CultureInfo("zh-CN");
-            Console.WriteLine("[Welcome!!] " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
+            Console.WriteLine("[*Welcome*] " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
             Debug.Logger("你好喵，欢迎来到Enhanced CloudMusic Debug Log模式w");
-            Debug.Logger("初始化中，Web服务初始化中...");
+            Debug.Logger("正在准备一些小惊喜喔w！Web服务初始化中...");
+
+            //WebApp Init
+            //string webappPath = Path.Combine(appPath, "\\webapp\\public");
+            //WebAppServerContributed webappInstance = new WebAppServerContributed(webappPath, 25108);
+            Debug.Logger("本地服务器初始化完成啦，在浏览器中访问 " + "http://localhost:" + /*webappInstance.Port.ToString()*/ "25108" + " 就可以了喵w");
 
             DynamicControl.HistoryFileTracker(FileControl.GetHistory());
             do
@@ -44,6 +51,7 @@ namespace CloudMusicHelper
             }
             while(false);
 
+            //webappInstance.Stop(); //停止服务器
             Console.ReadLine();
         }
     }
@@ -203,7 +211,8 @@ namespace CloudMusicHelper
          * 
          *****************************************************************************/
 
-
+        //这是索引文件/
+        //这些文件只可读喔
         private readonly string[] _indexFiles =
         {
         "index.html",
@@ -212,6 +221,7 @@ namespace CloudMusicHelper
         "default.htm"
         };
 
+        //webapp的文件类型列表/
         private static IDictionary<string, string> _mimeTypeMappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
         {
         #region extension to MIME type list
@@ -280,11 +290,12 @@ namespace CloudMusicHelper
         {".xpi", "application/x-xpinstall"},
         {".zip", "application/zip"},
         #endregion
-    };
-        private Thread _serverThread;
-        private string _rootDirectory;
-        private HttpListener _listener;
-        private int _port;
+        };
+
+        private Thread _serverThread; //新建一个服务器线程
+        private string _rootDirectory; //设置服务器根目录
+        private HttpListener _listener; //新建一个Http请求监听器
+        private int _port; //新建一个端口
 
         public int Port
         {
@@ -339,7 +350,7 @@ namespace CloudMusicHelper
                 }
                 catch (Exception ex)
                 {
-
+                    Debug.Logger(ex.Message);
                 }
             }
         }
@@ -416,7 +427,25 @@ namespace CloudMusicHelper
 
     class Modules
     {
+        public static string DataRefreshMessages()
+        {
+            List<string> textList = new List<string>();
 
+            textList.Add("数据已经刷新啦，正在解析呢喵..."); //0
+            textList.Add("切歌了喵？解析新的数据中~"); //1
+            textList.Add("网易云音乐小姐姐说正在播放新的东西呢，稍等moeBot酱写出来~"); //2
+            textList.Add("这个是什么音乐呀？查查看w"); //3
+            textList.Add("喵~知道在放另一首音乐啦，正在学习这个字怎么写呢>_<"); //4
+            textList.Add("诶，这个是什么？新的音乐吗？"); //5
+            textList.Add("喵喵。正在解析数据呢~"); //6
+            textList.Add("主人不要着急喔，moeBot酱正在处理这首曲子的信息啦~"); //6
+            textList.Add("据说...neko超喜欢听音乐，主人要去看看嘛？诶...切歌了...moeBot酱知道了呢"); //7
+            textList.Add("乌拉！正在和电脑内存大战！她刚刚不想写入数据呢......诶诶，好啦！"); //8
+
+            Random rnd = new Random();
+            string TextOut = textList[rnd.Next(0, 8)];
+            return TextOut;
+        }
     }
 
     class DynamicControl
@@ -464,7 +493,7 @@ namespace CloudMusicHelper
 
             if(Debug.CallCount == 2)
             {
-                Debug.Logger("数据已经刷新啦，正在解析呢喵...");
+                Debug.Logger(Modules.DataRefreshMessages());
                 Thread.Sleep(500); //Avoid file io stream error
                 HistoryUpdated();
 

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Net;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 /**************************************************************
  *                                                            *
@@ -43,6 +44,19 @@ namespace CloudMusicHelper
             //string webappPath = Path.Combine(appPath, "\\webapp\\public");
             //WebAppServerContributed webappInstance = new WebAppServerContributed(webappPath, 25108);
             Debug.Logger("本地服务器初始化完成啦，在浏览器中访问 " + "http://localhost:" + /*webappInstance.Port.ToString()*/ "25108" + " 就可以了喵w");
+
+            //这段需要更多的研究呢，此项需要要求管理员权限所以呢...需要研究如何提供，比如运行前或者运行后？
+            //另外就是可以参考这个 http://www.cnblogs.com/cmdszh/archive/2012/08/16/httplistener.html
+            //这篇文章有提到如何在管理员权限下添加localhost访问权限呢w
+            //这篇文章提到了如何要求管理员权限 http://www.cnblogs.com/mayswind/p/3355649.html#para1
+            
+            //不过除了使用这些方法，也可以尝试从外部调用nodejs
+            //这个部分还没有实践过呢，可以试试看
+
+            //另外记得一定一定要模组化了，不能懒下去了
+            //这样写下去迟早会出事的喵/
+            //不过已经很棒啦w，一天就能弄完这么多，还给了网易云的整个API文档指南呢w
+            //以上这段都是neko迷迷糊糊写出来的，请不要在意呢喵>_<
 
             DynamicControl.HistoryFileTracker(FileControl.GetHistory());
             do
@@ -413,6 +427,7 @@ namespace CloudMusicHelper
 
         private void Initialize(string path, int port)
         {
+            
             this._rootDirectory = path;
             this._port = port;
             _serverThread = new Thread(this.Listen);
@@ -422,7 +437,36 @@ namespace CloudMusicHelper
 
     class WebAppControl
     {
+        public static void AddAddress(string address)
+        {
+            try
+            {
+                AddAddress(address, Environment.UserDomainName, Environment.UserName);
+            }
+            catch (Exception ex)
+            {
+                Debug.Logger(ex.Message);
+                Console.ReadLine();
+            }
+        }
 
+        public static void AddAddress(string address, string domain, string user)
+        {
+            string argsDll = String.Format(@"http delete urlacl url={0}", address);
+            string args = string.Format(@"http add urlacl url={0} user={1}\{2}", address, domain, user);
+            ProcessStartInfo psi = new ProcessStartInfo("netsh", argsDll);
+            psi.Verb = "runas";
+            psi.CreateNoWindow = true;
+            psi.WindowStyle = ProcessWindowStyle.Hidden;
+            psi.UseShellExecute = false;
+            Process.Start(psi).WaitForExit();//删除urlacl
+            psi = new ProcessStartInfo("netsh", args);
+            psi.Verb = "runas";
+            psi.CreateNoWindow = true;
+            psi.WindowStyle = ProcessWindowStyle.Hidden;
+            psi.UseShellExecute = false;
+            Process.Start(psi).WaitForExit();//添加urlacl
+        }
     }
 
     class Modules

@@ -29,9 +29,19 @@ namespace CloudMusicHelper
     {
         static void Main(string[] args)
         {
+            DateTime localDate = DateTime.Now;
+            var format = new CultureInfo("zh-CN");
+            Console.WriteLine("[Welcome!!] " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
+            Debug.Logger("你好喵，欢迎来到Enhanced CloudMusic Debug Log模式w");
             Debug.Logger("初始化中，Web服务初始化中...");
 
             DynamicControl.HistoryFileTracker(FileControl.GetHistory());
+            do
+            {
+                HistoryControl.History();
+            }
+            while(false);
+
             Console.ReadLine();
         }
     }
@@ -165,9 +175,11 @@ namespace CloudMusicHelper
             string track_name = jarray[0]["track"]["name"].ToString();
             string artist_name = jarray[0]["track"]["artists"][0]["name"].ToString();
             string album_name = jarray[0]["track"]["album"]["name"].ToString();
+            string source = jarray[0]["text"].ToString();
 
             Debug.Logger("正在播放：" + track_name + " by " + artist_name);
-            Debug.Logger("来自专辑：" + album_name);
+            Debug.Logger("专辑信息：" + album_name);
+            Debug.Logger("项目来源：" + source);
             //hirerachy.track.name = jobj["track"];
             //hirerachy.track.id = ;
 
@@ -213,15 +225,45 @@ namespace CloudMusicHelper
             watcher.EnableRaisingEvents = true;
         }
 
+        private static void HistoryUpdated()
+        {
+            HistoryControl.History();
+        }
+
         private static void OnChanged(object source, FileSystemEventArgs e)
         {
-            Debug.Logger("数据更新中...");
-            Thread.Sleep(2000);
-            HistoryControl.History();
+            //Debug tool = new Debug();
+
+            int i = 0;
+            int counter;
+            i++;
+
+            counter = Debug.methodCallCount();
+
+            if(Debug.CallCount == 2)
+            {
+                Debug.Logger("数据已经刷新啦，正在解析呢喵...");
+                Thread.Sleep(500); //Avoid file io stream error
+                HistoryUpdated();
+
+                Debug.CallCount = 0;
+            }
+            else
+            {
+                if(Debug.CallCount >= 3)
+                {
+                    Debug.CallCount = 0;
+                }
+            }
+
+            //HistoryUpdated();
 
             /*
              * 这里有个小bug，因为读取之后似乎文件被改变了，导致这个event被触发了一次
              * 正在思考如何解决这个问题w
+             * 
+             * 这个bug解决啦w
+             * 使用的方法是采用方法调用计数，一旦调用超过一定数值才会响应w
              */
 
             /*
@@ -260,6 +302,7 @@ namespace CloudMusicHelper
 
     class Debug
     {
+        public static int CallCount = 0;
         public static void NullTracker()
         {
 
@@ -270,6 +313,15 @@ namespace CloudMusicHelper
             DateTime localDate = DateTime.Now;
             var format = new CultureInfo("zh-CN");
             Console.WriteLine("[Debug Log] " + localDate.ToString(format) + " : " + text);
+        }
+
+        public static int methodCallCount()
+        {
+            CallCount++;
+            int i= 0;
+            i++;
+
+            return i;
         }
     }
 }

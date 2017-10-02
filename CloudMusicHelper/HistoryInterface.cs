@@ -991,6 +991,8 @@ namespace CloudMusicHelper
 
     public class Hierarchy
     {
+        public string fm { get; set; }
+
         public Track track { get; set; }
 
         public string id { get; set; }
@@ -1016,6 +1018,12 @@ namespace CloudMusicHelper
         public string loaderr { get; set; }
 
         public int playedTime { get; set; }
+
+        public int playType { get; set; }
+
+        public int playBrt { get; set; }
+
+        public string playFile { get; set; }
 
         public string qid { get; set; }
 

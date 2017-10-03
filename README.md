@@ -1,2 +1,3 @@
 # EnhancedCloudMusic
-Enhanced CloudMusic Client
+Guess what's this!
+This is a Enhanced CloudMusic!

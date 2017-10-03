@@ -122,8 +122,6 @@ namespace CloudMusicHelper
 
         }
 
-        
-
         private static void LoggerWrite(string path, string text)
         {
             if(path == null)
@@ -140,7 +138,7 @@ namespace CloudMusicHelper
             var format = new CultureInfo("zh-CN");
             string output = "[" + type + "] " + localDate.ToString(format) + " : " + text;
             Console.WriteLine(output);
-            LoggerWrite(Data.logfullPath, "One");
+            //LoggerWrite(Data.logfullPath, "One");
         }
 
         public static int methodCallCount()

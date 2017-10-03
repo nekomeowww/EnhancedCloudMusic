@@ -87,9 +87,18 @@ namespace CloudMusicHelper
 
     class HistoryControl
     {
+        private static int playedcounter = 0;
+
+        private static int PlayCount()
+        {
+            playedcounter ++;
+            return playedcounter;
+        }
+
         public static void History()
         {
             Read();
+            Debug.Logger("已经记录的播放次数：" + PlayCount());
         }
 
         private static string Read()
@@ -106,9 +115,6 @@ namespace CloudMusicHelper
             {
                 Console.WriteLine(ex.Message);
             }
-
-            //debug
-            //Console.WriteLine(historytext);
 
             //Read and send data to processor
             JsonControl.HistoryParser(historytext);
@@ -200,6 +206,12 @@ namespace CloudMusicHelper
             string artist_name = jarray[0]["track"]["artists"][0]["name"].ToString();
             string album_name = jarray[0]["track"]["album"]["name"].ToString();
             string source = jarray[0]["text"].ToString();
+            string recommand_reason = null;
+            
+            if(source == "私人FM")
+            {
+                //todo
+            }
 
             Debug.Logger("正在播放：" + track_name + " by " + artist_name);
             Debug.Logger("专辑信息：" + album_name);

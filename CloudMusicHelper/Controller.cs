@@ -131,7 +131,7 @@ namespace CloudMusicHelper.Controller
             string logfull = logPath + logfile + logextn;
 
             //create log file
-            Controller.FileControl.FileCreate(logfile + logextn, logPath);
+            FileCreate(logfile + logextn, logPath);
 
             //Set Verifier
             bool havelog = File.Exists(logfull);
@@ -151,8 +151,19 @@ namespace CloudMusicHelper.Controller
             return logfull;
         }
 
-        public static void FileCreate(string filename, string path)
+        public static void LoggerWrite(string path, string text)
         {
+            if (path == null)
+            {
+                return;
+            }
+
+            FileWrite(Data.logfullPath, text);
+        }
+
+        private static void FileCreate(string filename, string path)
+        {
+            //FileStream fs = new FileStream();
             string filePath = null;
             
             //check directory for security reason
@@ -198,9 +209,12 @@ namespace CloudMusicHelper.Controller
             }
         }
 
-        public static void FileWrite(string filename, string path, string text)
+        private static void FileWrite(string fullpath, string text)
         {
-
+            if (File.Exists(fullpath))
+            {
+                File.WriteAllText(fullpath, text);
+            }
         }
     }
 

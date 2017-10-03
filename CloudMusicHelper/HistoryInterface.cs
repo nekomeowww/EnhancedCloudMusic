@@ -983,6 +983,8 @@ namespace CloudMusicHelper
 
         public string mp3Url { get; set; }
 
+        public string reason { get; set; }
+
         public int programId { get; set; }
 
         public Radio radio { get; set; }

@@ -299,7 +299,7 @@ namespace CloudMusicHelper.Controller
 
             if (Debug.CallCount == 2)
             {
-                Debug.Logger(Modules.DataRefreshMessages(), "Error Exc");
+                Debug.Logger(Modules.DataRefreshMessages(), "Debug Log");
                 Thread.Sleep(500); //Avoid file io stream error
                 HistoryUpdated();
 

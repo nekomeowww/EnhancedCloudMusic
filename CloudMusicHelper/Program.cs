@@ -1,19 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Globalization;
-using System.Threading.Tasks;
-using System.Security.Permissions;
-using System.Net;
-using System.Net.Sockets;
-using System.Diagnostics;
 
 /**************************************************************
  *                                                            *
@@ -112,7 +99,6 @@ namespace CloudMusicHelper
             return TextOut;
         }
     }
-    
 
     class Data
     {

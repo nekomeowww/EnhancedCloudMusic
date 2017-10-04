@@ -24,7 +24,7 @@ namespace CloudMusicHelper.Controller
         public static void History()
         {
             Read();
-            Debug.Logger("已经记录的播放次数：" + PlayCount(), "Debug Log");
+            Debug.Logger("已经记录的播放次数：" + PlayCount(), "Debug");
         }
 
         private static string Read()
@@ -131,23 +131,25 @@ namespace CloudMusicHelper.Controller
             string logfull = logPath + logfile + logextn;
 
             //create log file
-            FileCreate(logfile + logextn, logPath);
+            var newlog = File.Create(logfull);
+
+            //close file stream
+            newlog.Close();
 
             //Set Verifier
             bool havelog = File.Exists(logfull);
 
             if (havelog)
             {
-                Debug.Logger("Log文件已创建：" + logfile, "*Welcome*");
+                Debug.Logger("Log文件已创建：" + logfile + logextn, "Trace");
             }
             else
             {
-                Debug.Logger("Log文件未创建：" + logfile, "Error Exc");
+                Debug.Logger("Log文件未创建：" + logfile + logextn, "Error");
             }
 
             //finish create
             Data.logfullPath = logfull;
-            Debug.Logger("Current logfullPath: " + Data.logfullPath, "Debug Log");
             return logfull;
         }
 
@@ -157,64 +159,10 @@ namespace CloudMusicHelper.Controller
             {
                 return;
             }
-
-            FileWrite(Data.logfullPath, text);
-        }
-
-        private static void FileCreate(string filename, string path)
-        {
-            //FileStream fs = new FileStream();
-            string filePath = null;
             
-            //check directory for security reason
-            if(File.Exists(path))
-            {
-                Debug.Logger("致命错误：编译错误或开发维护出现了问题！请联系开发者！", "Error Exc");
-            }
-            else if(Directory.Exists(path))
-            {
-                filePath = path;
-            }
-            else if(Directory.Exists(path) == false)
-            {
-                try
-                {
-                    Directory.CreateDirectory(path);
-                }
-                catch(Exception e)
-                {
-                    Debug.Logger(e.Message, "Error Exc");
-                    return;
-                }
-                filePath = path;
-            }
-            else
-            {
-                Debug.Logger("致命错误：路径出现了严重问题！如果不是Windows系统，请手动编译；也可能是管理员权限问题。", "Error Exc");
-                return;
-            }
-
-            //create file
-            string fullPath = Path.Combine(filePath, filename);
-
-            if (!File.Exists(fullPath))
-            {
-                File.Create(fullPath);
-                Debug.fs.Close();
-            }
-            else
-            {
-                Debug.Logger("错误信息：文件已存在。", "Error Exc");
-                return;
-            }
-        }
-
-        private static void FileWrite(string fullpath, string text)
-        {
-            if (File.Exists(fullpath))
-            {
-                File.WriteAllText(fullpath, text);
-            }
+            TextWriter tw = new StreamWriter(path, true);
+            tw.Write(text + Environment.NewLine);
+            tw.Close();
         }
     }
 
@@ -240,13 +188,13 @@ namespace CloudMusicHelper.Controller
             string source = jarray[0]["text"].ToString();
             string recommand_reason = null;
 
-            Debug.Logger("正在播放：" + track_name + " by " + artist_name, "Debug Log");
-            Debug.Logger("专辑信息：" + album_name, "Debug Log");
-            Debug.Logger("项目来源：" + source, "Debug Log");
+            Debug.Logger("正在播放：" + track_name + " by " + artist_name, "Debug");
+            Debug.Logger("专辑信息：" + album_name, "Debug");
+            Debug.Logger("项目来源：" + source, "Debug");
             if (source == "每日歌曲推荐")
             {
                 recommand_reason = jarray[0]["track"]["reason"].ToString();
-                Debug.Logger("推荐原因：" + recommand_reason, "Debug Log");
+                Debug.Logger("推荐原因：" + recommand_reason, "Debug");
             }
             //hirerachy.track.name = jobj["track"];
             //hirerachy.track.id = ;
@@ -299,7 +247,7 @@ namespace CloudMusicHelper.Controller
 
             if (Debug.CallCount == 2)
             {
-                Debug.Logger(Modules.DataRefreshMessages(), "Debug Log");
+                Debug.Logger(Modules.DataRefreshMessages(), "Debug");
                 Thread.Sleep(500); //Avoid file io stream error
                 HistoryUpdated();
 

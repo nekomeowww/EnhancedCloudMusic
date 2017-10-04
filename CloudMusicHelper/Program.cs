@@ -39,25 +39,32 @@ namespace CloudMusicHelper
 
     class Helper
     {
+        public static void Init()
+        {
+            //Init log file
+            Controller.FileControl.LoggerCreate();
+        }
+
         public static void Run()
         {
+            //init the required things
+            Init();
+
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
             DateTime localDate = DateTime.Now;
             var format = new CultureInfo("zh-CN");
 
             //start
-            Console.WriteLine("[*Welcome*] " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
+            Console.WriteLine("[INFO]    " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
 
-            
-
-            Debug.Logger("你好喵，欢迎来到Enhanced CloudMusic Debug Log模式w", "Debug Log");
-            Debug.Logger("正在准备一些小惊喜喔w！Web服务初始化中...", "Debug Log");
+            Debug.Logger("你好喵，欢迎来到Enhanced CloudMusic Debug Log模式w", "Info");
+            Debug.Logger("正在准备一些小惊喜喔w！Web服务初始化中...", "Info");
             
             //WebApp Init
             //string webappPath = Path.Combine(appPath, "\\webapp\\public");
             //WebControl.WebAppServerContributed webappInstance = new WebControl.WebAppServerContributed(webappPath, 25108);
 
-            Debug.Logger("本地服务器初始化完成啦，在浏览器中访问 " + "http://localhost:" + /*webappInstance.Port.ToString()*/ "25108" + " 就可以了喵w", "Debug Log");
+            Debug.Logger("本地服务器初始化完成啦，在浏览器中访问 " + "http://localhost:" + /*webappInstance.Port.ToString()*/ "25108" + " 就可以了喵w", "Info");
 
             //这段需要更多的研究呢，此项需要要求管理员权限所以呢...需要研究如何提供，比如运行前或者运行后？
             //另外就是可以参考这个 http://www.cnblogs.com/cmdszh/archive/2012/08/16/httplistener.html
@@ -109,12 +116,12 @@ namespace CloudMusicHelper
 
     class Data
     {
-        public static string logfullPath = null;
+        public static string logfullPath { get; set; }
+        public static List<string> loglist { get; set; }
     }
 
     class Debug
     {
-        public static FileStream fs;
         public static int CallCount = 0;
 
         public static void NullTracker()
@@ -122,23 +129,33 @@ namespace CloudMusicHelper
 
         }
 
-        private static void LoggerWrite(string path, string text)
+        public static void Logger(string text, string type = "Info")
         {
-            if(path == null)
-            {
-                return;
-            }
-            Thread.Sleep(2000);
-            File.WriteAllText(path, text);
+            string output = LoggerPrefix(type) + text;
+            Console.WriteLine(output);
+            Controller.FileControl.LoggerWrite(Data.logfullPath, output);
         }
 
-        public static void Logger(string text, string type)
+        private static string LoggerPrefix(string key)
         {
             DateTime localDate = DateTime.Now;
             var format = new CultureInfo("zh-CN");
-            string output = "[" + type + "] " + localDate.ToString(format) + " : " + text;
-            Console.WriteLine(output);
-            //LoggerWrite(Data.logfullPath, "One");
+            string output;
+
+            Dictionary<string, string> TypeofLog = new Dictionary<string, string>();
+            
+            TypeofLog.Add("Trace",   "[TRACE]  ");
+            TypeofLog.Add("Info",    "[INFO]   ");
+            TypeofLog.Add("Debug",   "[DEBUG]  ");
+            TypeofLog.Add("Warning", "[WARNING]");
+            TypeofLog.Add("Error",   "[ERROR]  ");
+            TypeofLog.Add("Fatal",   "[FATAL]  ");
+
+            string value = TypeofLog[key];
+
+            output = value + " " + localDate.ToString(format) + " : ";
+
+            return output;
         }
 
         public static int methodCallCount()

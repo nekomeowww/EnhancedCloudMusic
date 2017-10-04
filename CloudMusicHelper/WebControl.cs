@@ -164,7 +164,7 @@ namespace CloudMusicHelper.WebControl
                 }
                 catch (Exception ex)
                 {
-                    Debug.Logger(ex.Message, "Error Exc");
+                    Debug.Logger(ex.Message, "Fatal");
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace CloudMusicHelper.WebControl
                 catch (Exception ex)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    Debug.Logger(ex.Message, "Error Exc");
+                    Debug.Logger(ex.Message, "Fatal");
                 }
 
             }
@@ -246,7 +246,7 @@ namespace CloudMusicHelper.WebControl
             }
             catch (Exception ex)
             {
-                Debug.Logger(ex.Message, "Error Exc");
+                Debug.Logger(ex.Message, "Fatal");
                 Console.ReadLine();
             }
         }

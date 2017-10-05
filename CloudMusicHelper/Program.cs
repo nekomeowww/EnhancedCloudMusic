@@ -19,29 +19,121 @@ namespace CloudMusicHelper
     {
         static void Main(string[] args)
         {
-            Helper.DebugInit();
-            Console.ReadLine();
+            if(args == null)
+            {
+                Helper.CommandLineHelp();
+                return;
+            }
+            else if(args != null)
+            {
+                Helper.CommandLineControl(args);
+            }
         }
     }
 
     class Helper
     {
-        public static void DebugInit()
+        public static void CommandLineControl(string[] args)
+        {
+            string mode = null;
+
+            if(args.Length > 1)
+            {
+                Console.WriteLine("唔...现在还不支持那个命令参数啦！");
+                Console.WriteLine("这个是一个小小的使用帮助呢喵： ");
+                CommandLineHelp();
+                return;
+            }
+            else if(args == null)
+            {
+                CommandLineHelp();
+                return;
+            }
+            else
+            {
+                try
+                {
+                    mode = args[0];
+                }
+                catch(Exception e)
+                {
+                    CommandLineHelp();
+                    return;
+                }
+            }
+
+            Mode(mode);
+        }
+
+        public static void CommandLineHelp()
+        {
+            //Create a new list to store the helping content
+            List<string> helptext = new List<string>();
+
+            //Add the helping content into the List
+            helptext.Add("");
+            helptext.Add("感谢使用CMHelper呢喵!");
+            helptext.Add("");
+            helptext.Add("help      Display the usage of CMHelper");
+            helptext.Add("");
+            helptext.Add("debug     Launch the CMHelper with Debug Log mode");
+            helptext.Add("clear     Clear all the log files");
+            helptext.Add("");
+
+            //display the helptext
+            foreach(string line in helptext)
+            {
+                Console.WriteLine(line);
+            }
+            return;
+        }
+
+        private static void ParameterControl()
+        {
+
+        }
+
+        private static void Mode(string mode = "help")
+        {
+            //switch the mode
+            switch (mode)
+            {
+                case "debug":
+                    // debug log mode
+                    DebugInit();
+                    break;
+                case "help":
+                    // display help
+                    CommandLineHelp();
+                    break;
+                case "clear":
+                    Console.WriteLine("这个功能正在建造呢w");
+                    break;
+                case "localapi":
+                    Console.WriteLine("这个功能正在建造呢w");
+                    break;
+                //default:
+                    // go debug
+                    //break;
+            }
+            return;
+        }
+
+        private static void DebugInit()
         {
             //Init log file
             Controller.FileControl.LoggerCreate();
             //Run the helper
             Run();
+            Console.ReadLine();
         }
 
-        public static void Run()
+        private static void Run()
         {
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
-            DateTime localDate = DateTime.Now;
-            var format = new CultureInfo("zh-CN");
 
             //start
-            Console.WriteLine("[INFO] " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
+            Console.WriteLine("[INFO] " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + " : " + "欢迎使用Enhanced CloudMusic喵~");
 
             Debug.Logger("你好喵，欢迎来到Enhanced CloudMusic Debug Log模式w", "Info");
             Debug.Logger("正在准备一些小惊喜喔w！Web服务初始化中...", "Info");

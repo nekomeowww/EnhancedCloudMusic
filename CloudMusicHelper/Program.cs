@@ -19,30 +19,29 @@ namespace CloudMusicHelper
     {
         static void Main(string[] args)
         {
-            Helper.Run();
+            Helper.DebugInit();
             Console.ReadLine();
         }
     }
 
     class Helper
     {
-        public static void Init()
+        public static void DebugInit()
         {
             //Init log file
             Controller.FileControl.LoggerCreate();
+            //Run the helper
+            Run();
         }
 
         public static void Run()
         {
-            //init the required things
-            Init();
-
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
             DateTime localDate = DateTime.Now;
             var format = new CultureInfo("zh-CN");
 
             //start
-            Console.WriteLine("[INFO]    " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
+            Console.WriteLine("[INFO] " + localDate.ToString(format) + " : " + "欢迎使用Enhanced CloudMusic喵~");
 
             Debug.Logger("你好喵，欢迎来到Enhanced CloudMusic Debug Log模式w", "Info");
             Debug.Logger("正在准备一些小惊喜喔w！Web服务初始化中...", "Info");
@@ -125,17 +124,18 @@ namespace CloudMusicHelper
         private static string LoggerPrefix(string key)
         {
             DateTime localDate = DateTime.Now;
-            var format = new CultureInfo("zh-CN");
+            var formatCountry = new CultureInfo("zh-CN");
+            string format = "yyyy/MM/dd HH:mm:ss";
             string output;
 
             Dictionary<string, string> TypeofLog = new Dictionary<string, string>();
             
-            TypeofLog.Add("Trace",   "[TRACE]  ");
-            TypeofLog.Add("Info",    "[INFO]   ");
-            TypeofLog.Add("Debug",   "[DEBUG]  ");
+            TypeofLog.Add("Trace",   "[TRACE]");
+            TypeofLog.Add("Info",    "[INFO]");
+            TypeofLog.Add("Debug",   "[DEBUG]");
             TypeofLog.Add("Warning", "[WARNING]");
-            TypeofLog.Add("Error",   "[ERROR]  ");
-            TypeofLog.Add("Fatal",   "[FATAL]  ");
+            TypeofLog.Add("Error",   "[ERROR]");
+            TypeofLog.Add("Fatal",   "[FATAL]");
 
             string value = TypeofLog[key];
 

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -120,14 +121,15 @@ namespace CloudMusicHelper.Controller
         {
             //set path for helper's log
             DateTime localDate = DateTime.Now;
-            var format = new CultureInfo("zh-CN");
+            var formatCountry = new CultureInfo("zh-CN");
+            string format = "yyyy/MM/dd HH:mm:ss";
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
             string logPath = Path.Combine(appPath, @"log\Helper\");
             string logname = "CloudMusicHelperLog-";
             string logextn = ".log";
             string logdateinit = localDate.ToString(format); //format: 2017 / 10 / 4 2:13:55
-            string logdate = System.Text.RegularExpressions.Regex.Replace(logdateinit, "[ :/]", "-"); //converted: 2017-10-4-2-13-55
-            string logfile = logname + logdate; //combine CloudMusicHelperLog- with 2017-10-4-2-13-55
+            string logdate = Regex.Replace(logdateinit, "[ :/]", "-"); //converted: 2017-10-04-02-13-55
+            string logfile = logname + logdate; //combine CloudMusicHelperLog- with 2017-10-04-02-13-55
             string logfull = logPath + logfile + logextn;
 
             //create log file
@@ -186,15 +188,27 @@ namespace CloudMusicHelper.Controller
             string artist_name = jarray[0]["track"]["artists"][0]["name"].ToString();
             string album_name = jarray[0]["track"]["album"]["name"].ToString();
             string source = jarray[0]["text"].ToString();
+            string href = jarray[0]["href"].ToString();
             string recommand_reason = null;
+            string playlistparam = "playlist";
+            string playlistauthor = null;
+            string commentCount = jarray[0]["track"]["commentCount"].ToString();
+            Match isPlaylist = Regex.Match(href, playlistparam, RegexOptions.IgnoreCase);
 
             Debug.Logger("正在播放：" + track_name + " by " + artist_name, "Debug");
+            Debug.Logger("共有评论：" + commentCount + "条", "Debug");
             Debug.Logger("专辑信息：" + album_name, "Debug");
             Debug.Logger("项目来源：" + source, "Debug");
-            if (source == "每日歌曲推荐")
+
+            if(source == "每日歌曲推荐")
             {
                 recommand_reason = jarray[0]["track"]["reason"].ToString();
                 Debug.Logger("推荐原因：" + recommand_reason, "Debug");
+            }
+            if(isPlaylist.ToString() == "playlist")
+            {
+                playlistauthor = jarray[0]["nickName"].ToString();
+                Debug.Logger("歌单作者：" + playlistauthor, "Debug");
             }
             //hirerachy.track.name = jobj["track"];
             //hirerachy.track.id = ;

@@ -7,7 +7,7 @@
     <ProjectGuid>{06905F13-1EFF-4B42-AD91-9045624CE204}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>CloudMusicHelper</RootNamespace>
-    <AssemblyName>CloudMusicHelper</AssemblyName>
+    <AssemblyName>CMHelper</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

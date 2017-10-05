@@ -19,6 +19,10 @@ namespace CloudMusicHelper
     {
         static void Main(string[] args)
         {
+            Helper.DebugInit();
+            //remember to de-comment the section below when generating the release
+
+            /*
             if(args == null)
             {
                 Helper.CommandLineHelp();
@@ -28,6 +32,7 @@ namespace CloudMusicHelper
             {
                 Helper.CommandLineControl(args);
             }
+            */
         }
     }
 
@@ -119,7 +124,7 @@ namespace CloudMusicHelper
             return;
         }
 
-        private static void DebugInit()
+        public static void DebugInit()
         {
             //Init log file
             Controller.FileControl.LoggerCreate();

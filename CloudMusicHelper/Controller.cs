@@ -192,11 +192,10 @@ namespace CloudMusicHelper.Controller
             string recommand_reason = null;
             string playlistparam = "playlist";
             string playlistauthor = null;
-            string commentCount = jarray[0]["track"]["commentCount"].ToString();
+            string commentCount = null;
             Match isPlaylist = Regex.Match(href, playlistparam, RegexOptions.IgnoreCase);
 
             Debug.Logger("正在播放：" + track_name + " by " + artist_name, "Debug");
-            Debug.Logger("共有评论：" + commentCount + "条", "Debug");
             Debug.Logger("专辑信息：" + album_name, "Debug");
             Debug.Logger("项目来源：" + source, "Debug");
 
@@ -204,6 +203,11 @@ namespace CloudMusicHelper.Controller
             {
                 recommand_reason = jarray[0]["track"]["reason"].ToString();
                 Debug.Logger("推荐原因：" + recommand_reason, "Debug");
+            }
+            if(jarray[0]["track"]["commentCount"] != null)
+            {
+                commentCount = jarray[0]["track"]["commentCount"].ToString();
+                Debug.Logger("共有评论：" + commentCount + "条", "Debug");
             }
             if(isPlaylist.ToString() == "playlist")
             {

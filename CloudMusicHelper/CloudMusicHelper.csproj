@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Controller.cs" />
     <Compile Include="WebAPI.cs" />
+    <Compile Include="WebAPIModules\Lyrics.cs" />
     <Compile Include="WebControl.cs" />
     <Compile Include="HistoryInterface.cs" />
     <Compile Include="Program.cs" />

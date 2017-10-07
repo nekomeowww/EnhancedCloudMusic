@@ -211,11 +211,14 @@ namespace CloudMusicHelper
 
         }
 
-        public static void Logger(string text, string type = "Info")
+        public static void Logger(string text, string type = "Info", bool tolog = true)
         {
             string output = LoggerPrefix(type) + text;
             Console.WriteLine(output);
-            Controller.FileControl.LoggerWrite(Data.logfullPath, output);
+            if(tolog == true)
+            {
+                Controller.FileControl.LoggerWrite(Data.logfullPath, output);
+            }
         }
 
         private static string LoggerPrefix(string key)

@@ -3,11 +3,34 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CloudMusicHelper.WebAPIModules;
+using System.Net.Http;
 
 namespace CloudMusicHelper
 {
-    class WebAPI
+    class CloudMusicWebAPI
     {
+        /*
+        private static readonly HttpClient client = new HttpClient();
+
+        public static async System.Threading.Tasks.Task PostAsync()
+        {
+            var values = new Dictionary<string, string>
+            {
+                { "thing1", "hello" },
+                { "thing2", "world" }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync("http://www.example.com/recepticle.aspx", content);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            //var responseString = await client.GetStringAsync("http://www.example.com/recepticle.aspx"); for GET
+        }
+        */
+
         //Doc for webapi
         //https://github.com/u3u/NeteaseCloudMusicApi
 

@@ -125,7 +125,7 @@ namespace CloudMusicHelper.Controller
             string format = "yyyy/MM/dd HH:mm:ss";
             string appPath = AppDomain.CurrentDomain.BaseDirectory;
             string logPath = Path.Combine(appPath, @"log\Helper\");
-            string logname = "CloudMusicHelperLog-";
+            string logname = "CMHelperLog-";
             string logextn = ".log";
             string logdateinit = localDate.ToString(format); //format: 2017 / 10 / 4 2:13:55
             string logdate = Regex.Replace(logdateinit, "[ :/]", "-"); //converted: 2017-10-04-02-13-55

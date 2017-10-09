@@ -60,7 +60,7 @@ namespace CloudMusicHelper
                 {
                     mode = args[0];
                 }
-                catch(Exception e)
+                catch(Exception)
                 {
                     CommandLineHelp();
                     return;
@@ -115,6 +115,9 @@ namespace CloudMusicHelper
                     Console.WriteLine("这个功能正在建造呢w");
                     break;
                 case "localapi":
+                    Console.WriteLine("这个功能正在建造呢w");
+                    break;
+                case "tagtoCM":
                     Console.WriteLine("这个功能正在建造呢w");
                     break;
                 //default:

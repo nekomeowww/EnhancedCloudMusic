@@ -69,14 +69,12 @@ namespace CloudMusicHelper
 
             //Add the helping content into the List
             helptext.Add("");
-            helptext.Add("感谢使用CMHelper呢喵!");
-            helptext.Add("");
             helptext.Add("help      Display the usage of CMHelper");
             helptext.Add("");
             helptext.Add("debug     Launch the CMHelper with Debug Log mode");
             helptext.Add("");
             helptext.Add("tag       Get the ID3tag infomation or Convert the tag to compatiable with CloudMusic");
-            helptext.Add("          Usage: tag [-convert [--convert-option] [--path-of-track] [--format]] [-get [path of track] [--format]]");
+            helptext.Add("          Usage: tag [-convert [--type] [--path-of-track] [--format]] [-get [path of track] [--format]]");
             helptext.Add("");
             helptext.Add("clear     Clear all the log files");
             helptext.Add("");
@@ -142,6 +140,7 @@ namespace CloudMusicHelper
                     TagConvert.TagConvert.TagCommand(param);
                     break;
                 default:
+                    Console.WriteLine("未知命令。");
                     CommandLineHelp();
                     break;
             }

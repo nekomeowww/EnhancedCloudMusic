@@ -31,6 +31,7 @@ namespace CloudMusicHelper
             else if(args != null)
             {
                 Helper.CommandLineControl(args);
+                return;
             }
             
         }
@@ -53,6 +54,7 @@ namespace CloudMusicHelper
                 {
                     mode = args[0];
                     ParameterControl(args);
+                    return;
                 }
                 catch(Exception)
                 {
@@ -74,7 +76,7 @@ namespace CloudMusicHelper
             helptext.Add("debug     Launch the CMHelper with Debug Log mode");
             helptext.Add("");
             helptext.Add("tag       Get the ID3tag infomation or Convert the tag to compatiable with CloudMusic");
-            helptext.Add("          Usage: tag [-convert [--type] [--path-of-track] [--format]] [-get [path of track] [--format]]");
+            helptext.Add("          Usage: tag [-convert [--type] [--path [path of track]] [--format]] [-get [--path [path of track]] [--format]]");
             helptext.Add("");
             helptext.Add("clear     Clear all the log files");
             helptext.Add("");
@@ -108,9 +110,10 @@ namespace CloudMusicHelper
                     param.Add(args[i]);
                 }
             }
-            
+
             //param could be null
             Mode(param, mode);
+            return;
         }
 
         private static void Mode(List<string> param, string mode = "help")
@@ -133,16 +136,12 @@ namespace CloudMusicHelper
                     Console.WriteLine("这个功能正在建造呢w");
                     break;
                 case "tag":
-                    foreach(string item in param)
-                    {
-                        Console.WriteLine("Current Param: " + item);
-                    }
                     TagConvert.TagConvert.TagCommand(param);
                     break;
-                default:
-                    Console.WriteLine("未知命令。");
-                    CommandLineHelp();
-                    break;
+                //default:
+                    //Console.WriteLine("未知命令。");
+                    //CommandLineHelp();
+                    //break;
             }
             return;
         }

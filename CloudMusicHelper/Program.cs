@@ -111,6 +111,7 @@ namespace CloudMusicHelper
                 }
             }
             
+            //param could be null
             Mode(param, mode);
         }
 
@@ -140,9 +141,9 @@ namespace CloudMusicHelper
                     }
                     TagConvert.TagConvert.TagCommand(param);
                     break;
-                //default:
-                    // go debug
-                    //break;
+                default:
+                    CommandLineHelp();
+                    break;
             }
             return;
         }

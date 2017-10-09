@@ -19,10 +19,10 @@ namespace CloudMusicHelper
     {
         static void Main(string[] args)
         {
-            Helper.DebugInit();
+            //Helper.DebugInit();
             //remember to de-comment the section below when generating the release
 
-            /*
+            
             if(args == null)
             {
                 Helper.CommandLineHelp();
@@ -32,7 +32,7 @@ namespace CloudMusicHelper
             {
                 Helper.CommandLineControl(args);
             }
-            */
+            
         }
     }
 
@@ -82,6 +82,7 @@ namespace CloudMusicHelper
             helptext.Add("help      Display the usage of CMHelper");
             helptext.Add("");
             helptext.Add("debug     Launch the CMHelper with Debug Log mode");
+            helptext.Add("tag       tag [--convert [path of track]] [--get [path of track]]");
             helptext.Add("clear     Clear all the log files");
             helptext.Add("");
 
@@ -117,7 +118,7 @@ namespace CloudMusicHelper
                 case "localapi":
                     Console.WriteLine("这个功能正在建造呢w");
                     break;
-                case "tagtoCM":
+                case "tag":
                     Console.WriteLine("这个功能正在建造呢w");
                     break;
                 //default:

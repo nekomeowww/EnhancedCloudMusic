@@ -8,6 +8,27 @@ namespace CloudMusicHelper.TagConvert
 {
     class TagConvert
     {
+        public static void TagCommand(List<string> param)
+        {
+
+        }
+
+        private static void TagCommandHelp()
+        {
+            //Create a new list to store the helping content
+            List<string> helptext = new List<string>();
+
+            //Add the helping content into the List
+            helptext.Add("");
+
+            //display the helptext
+            foreach (string line in helptext)
+            {
+                Console.WriteLine(line);
+            }
+            return;
+        }
+
         //link the track to taglib file object
         public static void CreateTaglib(string track)
         {

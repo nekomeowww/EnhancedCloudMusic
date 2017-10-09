@@ -42,14 +42,7 @@ namespace CloudMusicHelper
         {
             string mode = null;
 
-            if(args.Length > 1)
-            {
-                Console.WriteLine("唔...现在还不支持那个命令参数啦！");
-                Console.WriteLine("这个是一个小小的使用帮助呢喵： ");
-                CommandLineHelp();
-                return;
-            }
-            else if(args == null)
+            if(args == null)
             {
                 CommandLineHelp();
                 return;
@@ -59,6 +52,7 @@ namespace CloudMusicHelper
                 try
                 {
                     mode = args[0];
+                    ParameterControl(args);
                 }
                 catch(Exception)
                 {
@@ -66,8 +60,6 @@ namespace CloudMusicHelper
                     return;
                 }
             }
-
-            Mode(mode);
         }
 
         public static void CommandLineHelp()
@@ -82,7 +74,10 @@ namespace CloudMusicHelper
             helptext.Add("help      Display the usage of CMHelper");
             helptext.Add("");
             helptext.Add("debug     Launch the CMHelper with Debug Log mode");
-            helptext.Add("tag       tag [--convert [path of track]] [--get [path of track]]");
+            helptext.Add("");
+            helptext.Add("tag       Get the ID3tag infomation or Convert the tag to compatiable with CloudMusic");
+            helptext.Add("          Usage: tag [-convert [--convert-option] [--path-of-track] [--format]] [-get [path of track] [--format]]");
+            helptext.Add("");
             helptext.Add("clear     Clear all the log files");
             helptext.Add("");
 
@@ -94,12 +89,32 @@ namespace CloudMusicHelper
             return;
         }
 
-        private static void ParameterControl()
+        private static void ParameterControl(string[] args)
         {
+            string mode = null;
+            List<string> param = new List<string>();
 
+            try
+            {
+                mode = args[0];
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            if(args.Length > 1)
+            {
+                for (int i = 1; i < args.Length; i++)
+                {
+                    param.Add(args[i]);
+                }
+            }
+            
+            Mode(param, mode);
         }
 
-        private static void Mode(string mode = "help")
+        private static void Mode(List<string> param, string mode = "help")
         {
             //switch the mode
             switch (mode)
@@ -119,7 +134,11 @@ namespace CloudMusicHelper
                     Console.WriteLine("这个功能正在建造呢w");
                     break;
                 case "tag":
-                    Console.WriteLine("这个功能正在建造呢w");
+                    foreach(string item in param)
+                    {
+                        Console.WriteLine("Current Param: " + item);
+                    }
+                    TagConvert.TagConvert.TagCommand(param);
                     break;
                 //default:
                     // go debug

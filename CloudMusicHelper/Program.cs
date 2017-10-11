@@ -71,14 +71,15 @@ namespace CloudMusicHelper
 
             //Add the helping content into the List
             helptext.Add("");
-            helptext.Add("help      Display the usage of CMHelper");
+            helptext.Add("help        Display the usage of CMHelper");
             helptext.Add("");
-            helptext.Add("debug     Launch the CMHelper with Debug Log mode");
+            helptext.Add("debug       Launch the CMHelper with Debug Log mode");
             helptext.Add("");
-            helptext.Add("tag       Get the ID3tag infomation or Convert the tag to compatiable with CloudMusic");
-            helptext.Add("          Usage: tag [-convert [--type] [--path [path of track]] [--format]] [-get [--path [path of track]] [--format]]");
+            helptext.Add("tag         Get the ID3tag infomation or Convert the tag to compatiable with CloudMusic");
+            helptext.Add("            Usage: tag [-convert [--type] [--path [path of track]] [--format]] [-get [--path [path of track]] [--format]]");
             helptext.Add("");
-            helptext.Add("clear     Clear all the log files");
+            helptext.Add("getLyric    Get the lyric of the song, and return the Track ID that is currently playing or in the last record");
+            helptext.Add("clear       Clear all the log files");
             helptext.Add("");
 
             //display the helptext
@@ -138,7 +139,7 @@ namespace CloudMusicHelper
                 case "tag":
                     TagConvert.TagConvert.TagCommand(param);
                     break;
-                case "getlyrics":
+                case "getLyric":
                     WebAPIModules.Lyrics.GetLyrics();
                     break;
                 //default:

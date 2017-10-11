@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
 using System.IO;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.IO.Compression;
 
 namespace CloudMusicHelper.WebAPIModules
@@ -31,7 +29,7 @@ namespace CloudMusicHelper.WebAPIModules
 
             Debug.Logger("当前API URL：" + url);
 
-            CookieCollection cookies = new CookieCollection();
+            //CookieCollection cookies = new CookieCollection();
 
             //weapi不能使用GET，试试看POST
 

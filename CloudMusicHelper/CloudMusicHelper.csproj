@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller.cs" />
+    <Compile Include="StreamHelper\LiveStream.cs" />
     <Compile Include="TagConvert\TagConvert.cs" />
     <Compile Include="WebAPI.cs" />
     <Compile Include="WebAPIModules\Lyrics.cs" />

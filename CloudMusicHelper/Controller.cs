@@ -247,6 +247,9 @@ namespace CloudMusicHelper.Controller
             //hirerachy.track.id = ;
 
             //store data to model
+            Data.track.name = track_name;
+            Data.trackArtistsItem.name = artist_name;
+            Data.album.name = album_name;
             Data.track.id = track_id;
 
             return hirerachy;
@@ -259,7 +262,13 @@ namespace CloudMusicHelper.Controller
             JArray jarray = (JArray)JsonConvert.DeserializeObject(lines);
 
             int track_id = Int32.Parse(jarray[0]["track"]["id"].ToString());
+            string track_name = jarray[0]["track"]["name"].ToString();
+            string artist_name = jarray[0]["track"]["artists"][0]["name"].ToString();
+            string album_name = jarray[0]["track"]["album"]["name"].ToString();
 
+            Data.track.name = track_name;
+            Data.trackArtistsItem.name = artist_name;
+            Data.album.name = album_name;
             Data.track.id = track_id;
 
             return hirerachy;
@@ -273,7 +282,7 @@ namespace CloudMusicHelper.Controller
             FileSystemWatcher watcher = new FileSystemWatcher();
             /* Watch for changes in LastAccess and LastWrite times, and the renaming of files or directories. */
 
-            path = System.Text.RegularExpressions.Regex.Replace(path, "history", "");
+            path = Regex.Replace(path, "history", "");
 
             watcher.Path = path;
             watcher.NotifyFilter = NotifyFilters.LastAccess |
@@ -293,9 +302,69 @@ namespace CloudMusicHelper.Controller
             watcher.EnableRaisingEvents = true;
         }
 
+        public static void HistoryFileTrackerforAPI(string path)
+        {
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            /* Watch for changes in LastAccess and LastWrite times, and the renaming of files or directories. */
+
+            path = Regex.Replace(path, "history", "");
+
+            watcher.Path = path;
+            watcher.NotifyFilter = NotifyFilters.LastAccess |
+                                   NotifyFilters.LastWrite |
+                                   NotifyFilters.FileName |
+                                   NotifyFilters.DirectoryName;
+
+            watcher.Filter = "history";
+
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnChangedtoAPI);
+            //watcher.Created += new FileSystemEventHandler(OnChanged);
+            //watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            //watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            watcher.Error += new ErrorEventHandler(OnError);
+
+            watcher.EnableRaisingEvents = true;
+        }
+
         private static void HistoryUpdated()
         {
-            Controller.HistoryControl.History();
+            HistoryControl.History();
+            HistoryControl.PureHistory();
+            StreamHelper.LiveStream.NowPlaying();
+        }
+
+        private static void NowPlayingUpdated()
+        {
+            HistoryControl.PureHistory();
+            StreamHelper.LiveStream.NowPlaying();
+        }
+
+        private static void OnChangedtoAPI(object source, FileSystemEventArgs e)
+        {
+            //Debug tool = new Debug();
+
+            int i = 0;
+            int counter;
+            i++;
+
+            counter = Debug.methodCallCount();
+
+            if (Debug.CallCount == 2)
+            {
+                Debug.Logger(Modules.DataRefreshMessages(), "Debug");
+                Thread.Sleep(5000); //Avoid file io stream error
+                NowPlayingUpdated();
+
+                Debug.CallCount = 0;
+            }
+            else
+            {
+                if (Debug.CallCount >= 3)
+                {
+                    Debug.CallCount = 0;
+                }
+            }
         }
 
         private static void OnChanged(object source, FileSystemEventArgs e)
@@ -323,24 +392,8 @@ namespace CloudMusicHelper.Controller
                     Debug.CallCount = 0;
                 }
             }
-
-            //HistoryUpdated();
-
-            /*
-             * 这里有个小bug，因为读取之后似乎文件被改变了，导致这个event被触发了一次
-             * 正在思考如何解决这个问题w
-             * 
-             * 这个bug解决啦w
-             * 使用的方法是采用方法调用计数，一旦调用超过一定数值才会响应w
-             */
-
-            /*
-            if (e.ChangeType.ToString() == "Changed")
-            {
-                Debug.Logger("数据更新中...");
-            }
-            */
         }
+
         private static void OnRenamed(object source, RenamedEventArgs e)
         {
             // Specify what is done when a file is renamed.

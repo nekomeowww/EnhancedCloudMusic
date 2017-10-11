@@ -56,9 +56,9 @@ namespace CloudMusicHelper
                     ParameterControl(args);
                     return;
                 }
-                catch(Exception)
+                catch(Exception e)
                 {
-                    CommandLineHelp();
+                    Console.WriteLine(e.Message);
                     return;
                 }
             }
@@ -113,6 +113,7 @@ namespace CloudMusicHelper
             }
 
             //param could be null
+            Data.runningMode = mode;
             Mode(param, mode);
             return;
         }
@@ -124,6 +125,7 @@ namespace CloudMusicHelper
             {
                 case "debug":
                     // debug log mode
+                    StreamHelper.LiveStream.NowPlayingApiCreate();
                     DebugInit();
                     break;
                 case "help":
@@ -142,6 +144,17 @@ namespace CloudMusicHelper
                 case "getLyric":
                     WebAPIModules.Lyrics.GetLyrics();
                     break;
+                case "stream":
+                    try
+                    {
+                        StreamHelper.LiveStream.NowPlayingApiCreate();
+                    }
+                    catch(Exception e)
+                    {
+                        Debug.Logger("出现致命问题：" + e.Message, "Fatal");
+                    }
+                    StreamModeInit();
+                    break;
                 //default:
                     //Console.WriteLine("未知命令。");
                     //CommandLineHelp();
@@ -157,6 +170,20 @@ namespace CloudMusicHelper
             //Run the helper
             Run();
             Console.ReadLine();
+        }
+
+        public static void StreamModeInit()
+        {
+            StreamRun();
+        }
+
+        private static void StreamRun()
+        {
+            Controller.DynamicControl.HistoryFileTrackerforAPI(Controller.FileControl.GetHistory());
+            while(true)
+            {
+                Controller.HistoryControl.PureHistory();
+            }
         }
 
         private static void Run()
@@ -192,6 +219,7 @@ namespace CloudMusicHelper
             do
             {
                 Controller.HistoryControl.History();
+                StreamHelper.LiveStream.NowPlaying();
             }
             while (false);
 
@@ -227,9 +255,12 @@ namespace CloudMusicHelper
     class Data
     {
         public static string logfullPath { get; set; }
+        public static string nowplayingfullPath { get; set; }
         public static List<string> loglist { get; set; }
-
+        public static string runningMode { get; set; }
         public static Track track = new Track();
+        public static TrackArtistsItem trackArtistsItem = new TrackArtistsItem();
+        public static Album album = new Album();
     }
 
     class Debug

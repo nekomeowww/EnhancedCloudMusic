@@ -138,6 +138,9 @@ namespace CloudMusicHelper
                 case "tag":
                     TagConvert.TagConvert.TagCommand(param);
                     break;
+                case "getlyrics":
+                    WebAPIModules.Lyrics.GetLyrics();
+                    break;
                 //default:
                     //Console.WriteLine("未知命令。");
                     //CommandLineHelp();
@@ -191,6 +194,8 @@ namespace CloudMusicHelper
             }
             while (false);
 
+            Debug.Logger("当前歌曲ID:" + Data.track.id);
+
             //webappInstance.Stop(); //停止服务器
         }
     }
@@ -222,6 +227,8 @@ namespace CloudMusicHelper
     {
         public static string logfullPath { get; set; }
         public static List<string> loglist { get; set; }
+
+        public static Track track = new Track();
     }
 
     class Debug

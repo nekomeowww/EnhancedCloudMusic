@@ -28,6 +28,11 @@ namespace CloudMusicHelper.Controller
             Debug.Logger("已经记录的播放次数：" + PlayCount(), "Debug");
         }
 
+        public static void PureHistory()
+        {
+            PureRead();
+        }
+
         private static string Read()
         {
             string historytext = null;
@@ -45,6 +50,27 @@ namespace CloudMusicHelper.Controller
 
             //Read and send data to processor
             JsonControl.HistoryParser(historytext);
+
+            return historytext;
+        }
+
+        private static string PureRead()
+        {
+            string historytext = null;
+            string path = FileControl.GetHistory();
+
+            //Read the file into historytext
+            try
+            {
+                historytext = System.IO.File.ReadAllText(path);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            //Read and send data to processor
+            JsonControl.PureHistoryParser(historytext);
 
             return historytext;
         }
@@ -183,7 +209,8 @@ namespace CloudMusicHelper.Controller
             //list
             string hierarchy = jarray[0].ToString();
             string id = jarray[0]["id"].ToString();
-            string track = jarray[0]["track"].ToString();
+            int track_id = Int32.Parse(jarray[0]["track"]["id"].ToString());
+            //string track = jarray[0]["track"].ToString();
             string track_name = jarray[0]["track"]["name"].ToString();
             string artist_name = jarray[0]["track"]["artists"][0]["name"].ToString();
             string album_name = jarray[0]["track"]["album"]["name"].ToString();
@@ -216,6 +243,22 @@ namespace CloudMusicHelper.Controller
             }
             //hirerachy.track.name = jobj["track"];
             //hirerachy.track.id = ;
+
+            //store data to model
+            Data.track.id = track_id;
+
+            return hirerachy;
+        }
+
+        public static Hierarchy PureHistoryParser(string jsonfile)
+        {
+            Hierarchy hirerachy = new Hierarchy();
+            string lines = jsonfile;
+            JArray jarray = (JArray)JsonConvert.DeserializeObject(lines);
+
+            int track_id = Int32.Parse(jarray[0]["track"]["id"].ToString());
+
+            Data.track.id = track_id;
 
             return hirerachy;
         }

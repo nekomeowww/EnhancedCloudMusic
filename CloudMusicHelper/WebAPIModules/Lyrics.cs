@@ -23,7 +23,9 @@ namespace CloudMusicHelper.WebAPIModules
 
             Debug.Logger("当前歌曲ID: " + id);
 
-            string urlsample = "http://music.163.com/weapi/song/lyric?id=";
+            string urlsample = "http://music.163.com/api/song/lyric?id=";
+            string eapiurlsample = "http://music.163.com/eapi/song/lyric?id=";
+            string weapiurlsample = "http://music.163.com/weapi/song/lyric?id=";
 
             string url = urlsample + id;
 

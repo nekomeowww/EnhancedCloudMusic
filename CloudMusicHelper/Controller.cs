@@ -22,12 +22,14 @@ namespace CloudMusicHelper.Controller
             return playedcounter;
         }
 
+        //pull data from json with debug log, testing area before put them in PureHistory()
         public static void History()
         {
             Read();
             Debug.Logger("已经记录的播放次数：" + PlayCount(), "Debug");
         }
 
+        //pull pure data from json, must test in History() before use PureHistory()!
         public static void PureHistory()
         {
             PureRead();

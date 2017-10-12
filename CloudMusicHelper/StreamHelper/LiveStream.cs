@@ -23,7 +23,7 @@ namespace CloudMusicHelper.StreamHelper
             string album_name = Data.album.name;
 
             string outputprefix = "正在播放：";
-            string output = outputprefix + track_name + " by " + artist_name;
+            string output = outputprefix + track_name + " - " + artist_name;
 
             //stream to log
             do

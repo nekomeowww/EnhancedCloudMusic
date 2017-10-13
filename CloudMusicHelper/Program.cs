@@ -256,6 +256,7 @@ namespace CloudMusicHelper
     {
         public static string logfullPath { get; set; }
         public static string nowplayingfullPath { get; set; }
+        public static string nowplayingadfullPath { get; set; }
         public static List<string> loglist { get; set; }
         public static string runningMode { get; set; }
         public static Track track = new Track();

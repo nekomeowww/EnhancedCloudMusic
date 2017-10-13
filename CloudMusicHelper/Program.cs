@@ -21,19 +21,28 @@ namespace CloudMusicHelper
         {
             //Helper.DebugInit();
             //remember to de-comment the section below when generating the release
-
             
-            if(args == null)
+            //there is a small bug about when you directly call the executable program
+            //there will be an exception that the index is out of range for args[]
+
+            try
+            {
+                if (args == null)
+                {
+                    Helper.CommandLineHelp();
+                    return;
+                }
+                else if (args != null)
+                {
+                    Helper.CommandLineControl(args);
+                    return;
+                }
+            }
+            catch(Exception)
             {
                 Helper.CommandLineHelp();
                 return;
             }
-            else if(args != null)
-            {
-                Helper.CommandLineControl(args);
-                return;
-            }
-            
         }
     }
 
@@ -104,12 +113,21 @@ namespace CloudMusicHelper
                 Console.WriteLine(e.Message);
             }
 
-            if(args.Length > 1)
+            try
             {
-                for (int i = 1; i < args.Length; i++)
+                if (args.Length > 1)
                 {
-                    param.Add(args[i]);
+                    for (int i = 1; i < args.Length; i++)
+                    {
+                        param.Add(args[i]);
+                    }
+                    param.Add("placeholder");
                 }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
             }
 
             //param could be null

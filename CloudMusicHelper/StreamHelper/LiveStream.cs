@@ -23,7 +23,7 @@ namespace CloudMusicHelper.StreamHelper
             string artist_name = Data.trackArtistsItem.name;
             string album_name = Data.album.name;
 
-            string placeholder = "";
+            //string placeholder = "";
             string outputprefix = "正在播放：";
             string outputprefix2 = " 正在播放：";
             string outputinfo = " " + track_name + " - " + artist_name;
@@ -65,7 +65,7 @@ namespace CloudMusicHelper.StreamHelper
 
             if(!Directory.Exists(apiPath))
             {
-                System.IO.Directory.CreateDirectory(apiPath);
+                Directory.CreateDirectory(apiPath);
             }
 
             //create log file
